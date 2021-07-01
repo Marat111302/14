@@ -1,7 +1,20 @@
-if (typeof process !== 'undefined' && parseInt(process.versions.node.split('.')[0]) < 14) {
-  console.error('Your node version is currently', process.versions.node)
-  console.error('Please update it to a version >= 14.x.x from https://nodejs.org/')
-  process.exit(1)
-}
+const mineflayer = require('mineflayer')
 
-module.exports = require('./lib/loader.js')
+const bot = mineflayer.createBot({
+  host: 'free2.idley.gg', // minecraft server ip
+  username: 'email@example.com', // minecraft username
+  password: '12345678' // minecraft password, comment out if you want to log into online-mode=false servers
+  port: 40121,                // only set if you need a port that isn't 25565
+  version: false,             // only set if you need a specific version or snapshot (ie: "1.8.9" or "1.16.5"), otherwise it's set automatically
+  auth: 'mojang'              // only set if you need microsoft auth, then set this to 'microsoft'
+})
+
+bot.on('chat', (username, message) => {
+  if (username === bot.username) return
+  bot.chat(message)
+})
+
+// Log errors and kick reasons:
+bot.on('kicked', console.log)
+bot.on('error', console.log)
+ 
